@@ -1,14 +1,15 @@
 import telebot
+import yfinance as yf
 import time
 
 bot_token = '1284597640:AAGFQYIftrSQrxhROzwmqD2ZK7pmmzBX8_4'
 
 bot = telebot.TeleBot(token=bot_token)
 
-def find_at(msg):
+def find_dollar(msg):
     for text in msg:
-        if '@' in text:
-            return text
+        if '$' in text:
+            return text[1:]+".JK"
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -18,11 +19,12 @@ def send_welcome(message):
 def send_help(message):
     bot.reply_to(message, 'To be defined')
 
-@bot.message_handler(func=lambda msg: msg.text is not None and '@' in msg.text)
+@bot.message_handler(func=lambda msg: msg.text is not None and '$' in msg.text)
 def at_answer(message):
     texts = message.text.split()
-    at_text = find_at(texts)
+    stock_str = find_dollar(texts)
+    stock = yf.Ticker(stock_str)
 
-    bot.reply_to(message, "https://instagram/{}".format(at_text[1:]))
+    bot.reply_to(message, stock.info)
 
 bot.polling()
