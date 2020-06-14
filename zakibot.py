@@ -24,7 +24,7 @@ def at_answer(message):
     texts = message.text.split()
     stock_str = find_dollar(texts)
     stock = yf.Ticker(stock_str)
-
-    bot.reply_to(message, stock.info)
+    print(stock.info)
+    bot.reply_to(message, stock_str)
 
 bot.polling()
